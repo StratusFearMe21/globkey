@@ -60,8 +60,11 @@ fn unload() -> Result<(), &'static str> {
 }
 
 #[node_bindgen]
-fn is_running() -> Result<bool, bool> {
-    Ok(!*SHOULDSTOP.read())
+fn is_running() -> bool {
+    match DEVICETHREAD.get() {
+        Some(x) => x.lock().is_some(),
+        None => false,
+    }
 }
 
 #[node_bindgen]
