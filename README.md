@@ -3,16 +3,10 @@ A nodejs module for reading global keyevents, written in Rust
 
 I'm not very good at nodejs or javascript in general, but I do know rust. So I used it to make a node module.
 
+You use this library like so
 
-You use the library by defining a `.raw` function, this creates a callback that can be used to do whatever, here's an example
-```javascript
-let hook = require('../electron_globkey/dist');
+- start the module using the `start()` function
+- create a loop somewhere and call the `getKeys()` function on repeat
+- when you're done, first break out of the loop you created then run the `unload()` function
 
-hook.raw(function(key){
-    console.log(key)
-});
-```
-
-This functon simply returns an array of each key that the user has pressed down every time the user releases or presses down a key
-
-And that's it. I hope you find this library helpful. The module itself is contained in the **dist** folder
+And that's it. I hope you find this library helpful.
