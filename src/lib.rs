@@ -22,7 +22,7 @@ static DEVICETHREAD: sync::OnceCell<Mutex<Option<std::thread::JoinHandle<bool>>>
 fn start() {
     *SHOULDSTOP.write() = false;
     DEVICETHREAD
-        .set(Mutex::new(Some(std::thread::spawn(move || loop {
+        .set(Mutex::new(Some(std::thread::spawn(|| {
             let sender = DEVICEMPSC.0.lock();
             let device_state = DeviceState::new();
             let mut prev_keys = vec![];
@@ -42,11 +42,11 @@ fn start() {
 }
 
 #[node_bindgen]
-fn get_keys() -> Result<Vec<String>, bool> {
+fn get_keys() -> Result<Vec<String>, String> {
     let reciever = DEVICEMPSC.1.lock();
     match reciever.recv() {
         Ok(s) => Ok(s),
-        Err(_) => Err(false),
+        Err(e) => Err(e.to_string()),
     }
 }
 
