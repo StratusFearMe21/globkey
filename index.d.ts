@@ -6,12 +6,12 @@ declare module "globkey" {
     /**
      * Unloads and stops the globkey library. Returns a string if the worker thread could not be stopped
      */
-    export function unload(): void | string;
+    export function unload(): void;
     /**
      * @returns an array of the currently pressed keys, or a string containing an error if it failed.
      * @remarks this method will only fucntion properly if the `start()` function has already been called
      */
-    export function getKeys(): string[] | string;
+    export function getKeys(): string[];
     /**
      * @returns a boolean value based on if globkey is runnig or not.
      * @remarks this method will only return `true` if `start()` has been called
@@ -20,5 +20,5 @@ declare module "globkey" {
     /**
      * Unloads and stops the globkey library as well as kills the nodejs process. Returns a string if the worker thread could not be stopped
      */
-    export function stop(): void | string;
+    export function stop(): void;
 }
