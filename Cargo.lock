@@ -299,7 +299,7 @@ dependencies = [
 
 [[package]]
 name = "electron_globkey"
-version = "0.1.0"
+version = "1.0.36"
 dependencies = [
  "device_query",
  "node-bindgen",

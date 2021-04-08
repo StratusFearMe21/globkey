@@ -18,6 +18,8 @@ static SHOULDSTOP: sync::Lazy<RwLock<bool>> = sync::Lazy::new(|| RwLock::new(fal
 static DEVICETHREAD: sync::Lazy<Mutex<Option<std::thread::JoinHandle<bool>>>> =
     sync::Lazy::new(|| Mutex::new(None));
 
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
 #[node_bindgen]
 fn start() {
     *SHOULDSTOP.write() = false;
@@ -69,4 +71,9 @@ fn stop() -> Result<(), &'static str> {
         Ok(true) => std::process::exit(0),
         _ => Err("Failed to kill worker thread"),
     }
+}
+
+#[node_bindgen]
+fn version() -> String {
+    VERSION.to_string()
 }
