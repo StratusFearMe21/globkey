@@ -37,7 +37,6 @@ fn start() {
             }
             prev_keys = keys;
         }
-        ()
     }));
 }
 
