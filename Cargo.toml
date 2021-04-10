@@ -1,6 +1,6 @@
 [package]
 name = "electron_globkey"
-version = "1.0.40"
+version = "1.0.41"
 authors = ["Isaac Mills <rooster0055@protonmail.com>"]
 edition = "2018"
 build = "src/build.rs"
@@ -15,6 +15,7 @@ node-bindgen = { version = "4.0" }
 device_query = "*"
 once_cell = "*"
 parking_lot = "*"
+rayon = "*"
 stoppable_thread = "*"
 
 [build-dependencies]

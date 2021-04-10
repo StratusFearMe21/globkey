@@ -1,4 +1,5 @@
 use parking_lot::Mutex;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use std::sync::mpsc;
 
 use device_query::{DeviceQuery, DeviceState};
@@ -27,8 +28,11 @@ fn start() {
         while !stop.get() {
             let keys = device_state.get_keys();
             if keys != prev_keys {
-                let returnkeys: Vec<String> =
-                    keys.clone().into_iter().map(|x| format!("{}", x)).collect();
+                let returnkeys: Vec<String> = keys
+                    .clone()
+                    .into_par_iter()
+                    .map(|x| format!("{}", x))
+                    .collect();
                 sender.send(returnkeys).unwrap();
             }
             prev_keys = keys;
