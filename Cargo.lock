@@ -299,12 +299,13 @@ dependencies = [
 
 [[package]]
 name = "electron_globkey"
-version = "1.0.39"
+version = "1.0.40"
 dependencies = [
  "device_query",
  "node-bindgen",
  "once_cell",
  "parking_lot",
+ "stoppable_thread",
 ]
 
 [[package]]
@@ -1281,6 +1282,12 @@ dependencies = [
  "libc",
  "winapi",
 ]
+
+[[package]]
+name = "stoppable_thread"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e6700c1ed393aa9c1fff950032a64a4856436dadee820641ce1b914cab65019f"
 
 [[package]]
 name = "syn"
