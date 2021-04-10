@@ -21,11 +21,11 @@ const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 #[node_bindgen]
 fn start() {
-    *DEVICETHREAD.lock() = Some(stoppable_thread::spawn(|stop| {
+    *DEVICETHREAD.lock() = Some(stoppable_thread::spawn(|stopvar| {
         let sender = DEVICEMPSC.0.lock();
         let device_state = DeviceState::new();
         let mut prev_keys = vec![];
-        while !stop.get() {
+        while !stopvar.get() {
             let keys = device_state.get_keys();
             if keys != prev_keys {
                 let returnkeys: Vec<String> = keys
