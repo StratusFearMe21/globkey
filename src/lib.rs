@@ -14,14 +14,14 @@ use winput::{message_loop, Action, Vk};
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 static THREAD: Lazy<Mutex<Option<stoppable_thread::StoppableHandle<bool>>>> =
-Lazy::new(|| Mutex::new(None));
+    Lazy::new(|| Mutex::new(None));
 
 // #[cfg(target_family = "windows")]
 #[node_bindgen(mt)]
 fn on<F: Fn() + Send + 'static>(
     keybind: Vec<String>,
     returnfunc: std::sync::Mutex<F>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<(), Box<dyn std::error::Error>> {
     let mut keys_return: Vec<String> = Vec::new();
     let reciever = message_loop::start().unwrap();
     *THREAD.lock() = Some(stoppable_thread::spawn(move |shouldstop| {
@@ -193,62 +193,63 @@ fn on<F: Fn() + Send + 'static>(
             if keys_return == keybind {
                 returnjs()
             }
-        }));
-        Ok(())
-    }
+        }
+    }));
+    Ok(())
+}
 
-    // #[node_bindgen]
-    // fn start() {
-    //     *DEVICETHREAD.lock() = Some(stoppable_thread::spawn(|stopvar| {
-    //         let sender = DEVICEMPSC.0.lock();
-    //         let device_state = DeviceState::new();
-    //         let mut prev_keys = vec![];
-    //         while !stopvar.get() {
-    //             let keys = device_state.get_keys();
-    //             if keys != prev_keys {
-    //                 let returnkeys: Vec<String> = keys
-    //                     .clone()
-    //                     .into_par_iter()
-    //                     .map(|x| format!("{}", x))
-    //                     .collect();
-    //                 sender.send(returnkeys).unwrap();
-    //             }
-    //             prev_keys = keys;
-    //         }
-    //     }));
-    // }
-    //
-    // #[node_bindgen]
-    // fn get_keys() -> Result<Vec<String>, String> {
-    //     let reciever = DEVICEMPSC.1.lock();
-    //     match reciever.recv() {
-    //         Ok(s) => Ok(s),
-    //         Err(e) => Err(e.to_string()),
-    //     }
-    // }
-    //
-    // #[node_bindgen]
-    // fn unload() -> Result<(), &'static str> {
-    //     match DEVICETHREAD.lock().take().unwrap().stop().join() {
-    //         Ok(()) => Ok(()),
-    //         _ => Err("Failed to kill worker thread"),
-    //     }
-    // }
-    //
-    // #[node_bindgen]
-    // fn is_running() -> bool {
-    //     DEVICETHREAD.lock().is_some()
-    // }
-    //
-    // #[node_bindgen]
-    // fn stop() -> Result<(), &'static str> {
-    //     match DEVICETHREAD.lock().take().unwrap().stop().join() {
-    //         Ok(()) => std::process::exit(0),
-    //         _ => Err("Failed to kill worker thread"),
-    //     }
-    // }
-    //
-    // #[node_bindgen]
-    // fn version() -> String {
-    //     VERSION.to_string()
-    // }
+// #[node_bindgen]
+// fn start() {
+//     *DEVICETHREAD.lock() = Some(stoppable_thread::spawn(|stopvar| {
+//         let sender = DEVICEMPSC.0.lock();
+//         let device_state = DeviceState::new();
+//         let mut prev_keys = vec![];
+//         while !stopvar.get() {
+//             let keys = device_state.get_keys();
+//             if keys != prev_keys {
+//                 let returnkeys: Vec<String> = keys
+//                     .clone()
+//                     .into_par_iter()
+//                     .map(|x| format!("{}", x))
+//                     .collect();
+//                 sender.send(returnkeys).unwrap();
+//             }
+//             prev_keys = keys;
+//         }
+//     }));
+// }
+//
+// #[node_bindgen]
+// fn get_keys() -> Result<Vec<String>, String> {
+//     let reciever = DEVICEMPSC.1.lock();
+//     match reciever.recv() {
+//         Ok(s) => Ok(s),
+//         Err(e) => Err(e.to_string()),
+//     }
+// }
+//
+// #[node_bindgen]
+// fn unload() -> Result<(), &'static str> {
+//     match DEVICETHREAD.lock().take().unwrap().stop().join() {
+//         Ok(()) => Ok(()),
+//         _ => Err("Failed to kill worker thread"),
+//     }
+// }
+//
+// #[node_bindgen]
+// fn is_running() -> bool {
+//     DEVICETHREAD.lock().is_some()
+// }
+//
+// #[node_bindgen]
+// fn stop() -> Result<(), &'static str> {
+//     match DEVICETHREAD.lock().take().unwrap().stop().join() {
+//         Ok(()) => std::process::exit(0),
+//         _ => Err("Failed to kill worker thread"),
+//     }
+// }
+//
+// #[node_bindgen]
+// fn version() -> String {
+//     VERSION.to_string()
+// }
