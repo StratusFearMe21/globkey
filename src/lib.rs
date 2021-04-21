@@ -13,15 +13,21 @@ use winput::{message_loop, Action, Vk};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
+static THREAD: Lazy<Mutex<Option<stoppable_thread::StoppableHandle<bool>>>> = Lazy::new(|| Mutex::new(None))
+
 // #[cfg(target_family = "windows")]
 #[node_bindgen(mt)]
 fn on<F: Fn() + Send + 'static>(
     keybind: Vec<String>,
     returnfunc: Mutex<F>,
-) -> Result<(), Box<dyn std::error::Error>> {
+    ) -> Result<(), Box<dyn std::error::Error>> {
     let mut keys_return: Vec<String> = Vec::new();
     let reciever = message_loop::start()?;
-    stoppable_thread::spawn(|| loop {
+    *THREAD.lock() = Some(stoppable_thread::spawn(|shouldstop| loop {
+        if shouldstop.get() {
+            reciever.stop();
+            return true;
+        }
         let returnjs = returnfunc.lock();
         match reciever.next_event() {
             message_loop::Event::Keyboard {
@@ -185,7 +191,7 @@ fn on<F: Fn() + Send + 'static>(
         if keys_return == keybind {
             returnjs()
         }
-    });
+    }));
     Ok(())
 }
 
