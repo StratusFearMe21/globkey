@@ -18,5 +18,8 @@ parking_lot = "*"
 rayon = "*"
 stoppable_thread = "*"
 
+# [target.'cfg(target_family = "windows")'.dependencies]
+winput = "*"
+
 [build-dependencies]
 node-bindgen = { version = "4.0", features = ["build"] }
