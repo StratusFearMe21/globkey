@@ -23,8 +23,8 @@ fn on<F: Fn() + Send + 'static>(
     returnfunc: Mutex<F>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let mut keys_return: Vec<String> = Vec::new();
-    let reciever = message_loop::start()?;
-    *THREAD.lock() = Some(stoppable_thread::spawn(|shouldstop| loop {
+    let reciever = message_loop::start().unwrap();
+    *THREAD.lock() = Some(stoppable_thread::spawn(move |shouldstop| loop {
         if shouldstop.get() {
             reciever.stop();
             return true;
