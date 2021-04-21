@@ -17,7 +17,7 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 #[node_bindgen]
 async fn on<F: Fn()>(keybind: Vec<String>, returnjs: F) -> Result<(), Box<dyn std::error::Error>> {
     let mut keys_return: Vec<String> = Vec::new();
-    let reciever = message_loop::start().unwrap();
+    let reciever = message_loop::start()?;
     loop {
         match reciever.next_event() {
             message_loop::Event::Keyboard {
@@ -52,6 +52,7 @@ async fn on<F: Fn()>(keybind: Vec<String>, returnjs: F) -> Result<(), Box<dyn st
                     Vk::Space => "Space".to_string(),
                     Vk::LeftControl => "LControl".to_string(),
                     Vk::RightControl => "RControl".to_string(),
+                    Vk::Control => "Control".to_string(),
                     Vk::LeftShift => "LShift".to_string(),
                     Vk::RightShift => "RShift".to_string(),
                     Vk::Alt => "LAlt".to_string(),
@@ -126,6 +127,7 @@ async fn on<F: Fn()>(keybind: Vec<String>, returnjs: F) -> Result<(), Box<dyn st
                     Vk::Space => "Space".to_string(),
                     Vk::LeftControl => "LControl".to_string(),
                     Vk::RightControl => "RControl".to_string(),
+                    Vk::Control => "Control".to_string(),
                     Vk::LeftShift => "LShift".to_string(),
                     Vk::RightShift => "RShift".to_string(),
                     Vk::Alt => "LAlt".to_string(),
