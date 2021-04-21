@@ -27,7 +27,6 @@ fn on<F: Fn() + Send + 'static>(
         let reciever = message_loop::start().unwrap();
         loop {
             if shouldstop.get() {
-                message_loop::stop();
                 return message_loop::is_active();
             }
             match reciever.next_event() {
@@ -234,6 +233,7 @@ fn is_running() -> bool {
 
 #[node_bindgen]
 fn stop() -> Result<(), &'static str> {
+    message_loop::stop();
     match THREAD.lock().take().unwrap().stop().join() {
         Ok(bool) => std::process::exit(0),
         _ => Err("Failed to kill worker thread"),
