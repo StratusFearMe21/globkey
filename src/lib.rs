@@ -20,12 +20,11 @@ static THREAD: Lazy<Mutex<Option<stoppable_thread::StoppableHandle<bool>>>> =
 #[node_bindgen(mt)]
 fn on<F: Fn() + Send + 'static>(
     keybind: Vec<String>,
-    returnfunc: std::sync::Mutex<F>,
+    returnjs: F,
 ) -> Result<(), Box<dyn std::error::Error>> {
     *THREAD.lock() = Some(stoppable_thread::spawn(move |shouldstop| {
         let mut keys_return: Vec<String> = Vec::new();
         let reciever = message_loop::start().unwrap();
-        let returnjs = returnfunc.lock().unwrap();
         loop {
             if shouldstop.get() {
                 message_loop::stop();
