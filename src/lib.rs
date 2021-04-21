@@ -26,8 +26,8 @@ fn on<F: Fn() + Send + 'static>(
     let reciever = message_loop::start().unwrap();
     *THREAD.lock() = Some(stoppable_thread::spawn(move |shouldstop| loop {
         if shouldstop.get() {
-            reciever.stop();
-            return true;
+            message_loop::stop();
+            return message_loop::is_active();
         }
         let returnjs = returnfunc.lock();
         match reciever.next_event() {
