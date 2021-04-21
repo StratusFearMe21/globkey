@@ -220,6 +220,7 @@ fn on<F: Fn() + Send + 'static>(
 
 #[node_bindgen]
 fn unload() -> Result<(), &'static str> {
+    message_loop::stop();
     match THREAD.lock().take().unwrap().stop().join() {
         Ok(bool) => Ok(()),
         _ => Err("Failed to kill worker thread"),
