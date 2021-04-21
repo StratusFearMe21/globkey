@@ -222,7 +222,7 @@ fn on<F: Fn() + Send + 'static>(
 #[node_bindgen]
 fn unload() -> Result<(), &'static str> {
     match THREAD.lock().take().unwrap().stop().join() {
-        Ok(()) => Ok(()),
+        Ok(bool) => Ok(()),
         _ => Err("Failed to kill worker thread"),
     }
 }
@@ -235,7 +235,7 @@ fn is_running() -> bool {
 #[node_bindgen]
 fn stop() -> Result<(), &'static str> {
     match THREAD.lock().take().unwrap().stop().join() {
-        Ok(()) => std::process::exit(0),
+        Ok(bool) => std::process::exit(0),
         _ => Err("Failed to kill worker thread"),
     }
 }
