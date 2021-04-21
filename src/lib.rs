@@ -1,4 +1,4 @@
-use parking_lot::RwLock;
+use parking_lot::{Mutex, RwLock};
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use std::sync::mpsc;
 
@@ -14,11 +14,15 @@ use winput::{message_loop, Action, Vk};
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 // #[cfg(target_family = "windows")]
-#[node_bindgen]
-async fn on<F: Fn()>(keybind: Vec<String>, returnjs: F) -> Result<(), Box<dyn std::error::Error>> {
+#[node_bindgen(mt)]
+fn on<F: Fn() + Send + 'static>(
+    keybind: Vec<String>,
+    returnfunc: Mutex<F>,
+) -> Result<(), Box<dyn std::error::Error>> {
     let mut keys_return: Vec<String> = Vec::new();
     let reciever = message_loop::start()?;
-    loop {
+    stoppable_thread::spawn(|| loop {
+        let returnjs = returnfunc.lock();
         match reciever.next_event() {
             message_loop::Event::Keyboard {
                 vk,
@@ -181,7 +185,7 @@ async fn on<F: Fn()>(keybind: Vec<String>, returnjs: F) -> Result<(), Box<dyn st
         if keys_return == keybind {
             returnjs()
         }
-    }
+    });
     Ok(())
 }
 
