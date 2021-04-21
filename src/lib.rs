@@ -218,37 +218,29 @@ fn on<F: Fn() + Send + 'static>(
 //     }));
 // }
 //
-// #[node_bindgen]
-// fn get_keys() -> Result<Vec<String>, String> {
-//     let reciever = DEVICEMPSC.1.lock();
-//     match reciever.recv() {
-//         Ok(s) => Ok(s),
-//         Err(e) => Err(e.to_string()),
-//     }
-// }
-//
-// #[node_bindgen]
-// fn unload() -> Result<(), &'static str> {
-//     match DEVICETHREAD.lock().take().unwrap().stop().join() {
-//         Ok(()) => Ok(()),
-//         _ => Err("Failed to kill worker thread"),
-//     }
-// }
-//
-// #[node_bindgen]
-// fn is_running() -> bool {
-//     DEVICETHREAD.lock().is_some()
-// }
-//
-// #[node_bindgen]
-// fn stop() -> Result<(), &'static str> {
-//     match DEVICETHREAD.lock().take().unwrap().stop().join() {
-//         Ok(()) => std::process::exit(0),
-//         _ => Err("Failed to kill worker thread"),
-//     }
-// }
-//
-// #[node_bindgen]
-// fn version() -> String {
-//     VERSION.to_string()
-// }
+
+#[node_bindgen]
+fn unload() -> Result<(), &'static str> {
+    match THREAD.lock().take().unwrap().stop().join() {
+        Ok(()) => Ok(()),
+        _ => Err("Failed to kill worker thread"),
+    }
+}
+
+#[node_bindgen]
+fn is_running() -> bool {
+    THREAD.lock().is_some()
+}
+
+#[node_bindgen]
+fn stop() -> Result<(), &'static str> {
+    match THREAD.lock().take().unwrap().stop().join() {
+        Ok(()) => std::process::exit(0),
+        _ => Err("Failed to kill worker thread"),
+    }
+}
+
+#[node_bindgen]
+fn version() -> String {
+    VERSION.to_string()
+}
