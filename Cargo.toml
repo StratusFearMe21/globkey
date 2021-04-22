@@ -1,6 +1,6 @@
 [package]
 name = "electron_globkey"
-version = "1.0.41"
+version = "1.0.42"
 authors = ["Isaac Mills <rooster0055@protonmail.com>"]
 edition = "2018"
 build = "src/build.rs"
@@ -17,9 +17,6 @@ once_cell = "*"
 parking_lot = "*"
 rayon = "*"
 stoppable_thread = "*"
-
-# [target.'cfg(target_family = "windows")'.dependencies]
-winput = "*"
 
 [build-dependencies]
 node-bindgen = { version = "4.0", features = ["build"] }

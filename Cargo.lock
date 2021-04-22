@@ -339,7 +339,7 @@ checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
 
 [[package]]
 name = "electron_globkey"
-version = "1.0.41"
+version = "1.0.42"
 dependencies = [
  "device_query",
  "node-bindgen",
@@ -347,7 +347,6 @@ dependencies = [
  "parking_lot",
  "rayon",
  "stoppable_thread",
- "winput",
 ]
 
 [[package]]
@@ -1747,15 +1746,6 @@ name = "winapi-x86_64-pc-windows-gnu"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
-
-[[package]]
-name = "winput"
-version = "0.2.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1453ded891d9778e54dffa7de2cf66abc7205fe0410553dd5f2f0fc52e7bb166"
-dependencies = [
- "winapi",
-]
 
 [[package]]
 name = "winreg"
