@@ -1,6 +1,6 @@
 [package]
 name = "electron_globkey"
-version = "1.0.60"
+version = "1.0.61"
 authors = ["Isaac Mills <rooster0055@protonmail.com>"]
 edition = "2018"
 build = "src/build.rs"

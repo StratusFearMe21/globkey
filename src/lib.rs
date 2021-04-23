@@ -46,7 +46,7 @@ fn start<F: Fn() + Send + 'static>(
                     winapi::um::winuser::WM_KEYUP => {
                         if message.wParam == 0x42 && hotpressed {
                             println!("released");
-                            hotpressed = false;
+                            hotpressed = true;
                         }
                     }
                     _ => {}
