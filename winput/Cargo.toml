@@ -1,0 +1,44 @@
+[package]
+name = "winput"
+version = "0.2.3"
+authors = ["Gymore <gymore.contact@gmail.com>"]
+edition = "2018"
+description = "A high-level interface to Windows' input system."
+categories = ["os::windows-apis", "api-bindings"]
+license = "MIT"
+keywords = ["windows", "input", "simulation", "keyboard", "mouse"]
+repository = "https://github.com/gymore-io/winput"
+documentation = "https://docs.rs/winput/"
+
+[lib]
+# Most of doctests involve simulating keystrokes/mouse motion.
+# It is quite troublesome to see random things getting typed when executing tests.
+doctest = false
+
+[features]
+default = ["message_loop"]
+
+# Disables non-Windows related features.
+minimal = []
+
+# Enables the `message_loop` module.
+message_loop = [
+	"winapi/libloaderapi",
+	"winapi/windef",
+	"winapi/minwindef",
+	"winapi/hidusage"
+]
+
+[dependencies]
+stoppable_thread = "*"
+
+[dependencies.winapi]
+version = "0.3"
+default-features = false
+features = ["winuser", "errhandlingapi", "winbase"]
+
+[badges.maintenance]
+status = "passively-maintained"
+
+[package.metadata.docs.rs]
+default-target = "x86_64-pc-windows-msvc"
