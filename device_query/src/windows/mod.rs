@@ -15,43 +15,43 @@ impl DeviceState {
         DeviceState {}
     }
 
-    // pub fn query_pointer(&self) -> MouseState {
-    //     let point = &mut POINT { x: 0, y: 0 };
-    //     let button1pressed;
-    //     let button2pressed;
-    //     let button3pressed;
-    //     let button4pressed;
-    //     let button5pressed;
-    //     let coords;
-    //     unsafe {
-    //         coords = if GetCursorPos(point) != 0 {
-    //             ((*point).x, (*point).y)
-    //         } else {
-    //             (0, 0)
-    //         };
-    //         button1pressed =
-    //             GetAsyncKeyState(winuser::VK_LBUTTON) as u32 & 0x8000 != 0;
-    //         button2pressed =
-    //             GetAsyncKeyState(winuser::VK_RBUTTON) as u32 & 0x8000 != 0;
-    //         button3pressed =
-    //             GetAsyncKeyState(winuser::VK_MBUTTON) as u32 & 0x8000 != 0;
-    //         button4pressed =
-    //             GetAsyncKeyState(winuser::VK_XBUTTON1) as u32 & 0x8000 != 0;
-    //         button5pressed =
-    //             GetAsyncKeyState(winuser::VK_XBUTTON2) as u32 & 0x8000 != 0;
-    //     }
-    //     MouseState {
-    //         coords: coords,
-    //         button_pressed: vec![
-    //             false,
-    //             button1pressed,
-    //             button2pressed,
-    //                 button3pressed,
-    //                 button4pressed,
-    //                 button5pressed,
-    //             ],
-    //         }
-    //     }
+    pub fn query_pointer(&self) -> MouseState {
+        let point = &mut POINT { x: 0, y: 0 };
+        let button1pressed;
+        let button2pressed;
+        let button3pressed;
+        let button4pressed;
+        let button5pressed;
+        let coords;
+        unsafe {
+            coords = if GetCursorPos(point) != 0 {
+                ((*point).x, (*point).y)
+            } else {
+                (0, 0)
+            };
+            button1pressed =
+                GetAsyncKeyState(winuser::VK_LBUTTON) as u32 & 0x8000 != 0;
+            button2pressed =
+                GetAsyncKeyState(winuser::VK_RBUTTON) as u32 & 0x8000 != 0;
+            button3pressed =
+                GetAsyncKeyState(winuser::VK_MBUTTON) as u32 & 0x8000 != 0;
+            button4pressed =
+                GetAsyncKeyState(winuser::VK_XBUTTON1) as u32 & 0x8000 != 0;
+            button5pressed =
+                GetAsyncKeyState(winuser::VK_XBUTTON2) as u32 & 0x8000 != 0;
+        }
+        MouseState {
+            coords: coords,
+            button_pressed: vec![
+                false,
+                button1pressed,
+                button2pressed,
+                button3pressed,
+                button4pressed,
+                button5pressed,
+            ],
+        }
+    }
 
     pub fn query_keymap(&self) -> Vec<Keycode> {
         let mut keycodes = vec![];
