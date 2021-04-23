@@ -1,4 +1,6 @@
+#[cfg(not(windows))]
 use device_query::{DeviceQuery, DeviceState};
+
 use node_bindgen::derive::node_bindgen;
 use once_cell::sync::Lazy;
 use parking_lot::Mutex;
