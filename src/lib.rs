@@ -2,7 +2,9 @@ use device_query::{DeviceQuery, DeviceState};
 use node_bindgen::derive::node_bindgen;
 use once_cell::sync::Lazy;
 use parking_lot::Mutex;
-use rayon::iter::{IntoParallelIterator, ParallelIterator};
+use rayon::iter::{
+    IndexedParallelIterator, IntoParallelIterator, IntoParallelRefIterator, ParallelIterator,
+};
 use winput::{message_loop, Action, Vk};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -44,6 +46,7 @@ fn start<F: Fn(Vec<String>) + Send + 'static>(returnjs: F) {
                         _ => (),
                     }
                 }
+                _ => (),
             }
         }
     }));
