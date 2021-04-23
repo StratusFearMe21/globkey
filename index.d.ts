@@ -1,6 +1,6 @@
 declare module "globkey" {
     /**
-     * Loads and starts the globkey library
+     * Loads and starts the globkey library then every time a key is pressed or released, a callback function is run with the currently pressed down keys as the output. Ex. ['LControl', 'Key0']
      */
     export function start(callback: (keypair: string[]) => void): void;
     /**
