@@ -15,7 +15,7 @@ static THREAD: Lazy<Mutex<Option<stoppable_thread::StoppableHandle<()>>>> =
 #[node_bindgen(mt)]
 fn start<F: Fn(Vec<String>) + Send + 'static>(returnjs: F) {
     *THREAD.lock() = Some(stoppable_thread::spawn(move |stopvar| {
-        let receiver = message_loop::start().unwrap();
+        let mut receiver = message_loop::start().unwrap();
         let mut keys_return = vec![];
         loop {
             if stopvar.get() {

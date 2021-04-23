@@ -479,7 +479,7 @@ pub fn start() -> Result<EventReceiver, MessageLoopError> {
 
     error_r.recv().unwrap().map(|()| EventReceiver {
         receiver: r,
-        thread,
+        thread: Some(thread),
     })
 }
 
@@ -541,7 +541,7 @@ pub enum Event {
 /// [`start`]: fn.start.html
 pub struct EventReceiver {
     receiver: mpsc::Receiver<Event>,
-    thread: stoppable_thread::StoppableHandle<()>,
+    pub thread: Option<stoppable_thread::StoppableHandle<()>>,
 }
 
 impl EventReceiver {
@@ -553,8 +553,8 @@ impl EventReceiver {
         }
     }
 
-    pub fn stop(&self) {
-        self.thread.stop().join();
+    pub fn stop(&mut self) {
+        self.thread.take().unwrap().stop().join();
     }
 
     /// Blocks the current thread until an event is received.
