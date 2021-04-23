@@ -1,6 +1,6 @@
 [package]
 name = "electron_globkey"
-version = "1.0.59"
+version = "1.0.60"
 authors = ["Isaac Mills <rooster0055@protonmail.com>"]
 edition = "2018"
 build = "src/build.rs"
@@ -16,7 +16,9 @@ once_cell = "*"
 parking_lot = "*"
 rayon = "*"
 stoppable_thread = "*"
-device_query = { version = "*", path = "device_query" }
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3.9", features = ["winuser"]}
 
 [build-dependencies]
 node-bindgen = { version = "4.0", features = ["build"] }

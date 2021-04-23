@@ -1,21 +1,64 @@
-use device_query::{DeviceQuery, DeviceState};
-
 use node_bindgen::derive::node_bindgen;
 use once_cell::sync::Lazy;
 use parking_lot::Mutex;
-use rayon::iter::{IntoParallelIterator, ParallelIterator};
+use std::convert::TryInto;
+
+#[cfg(windows)]
+use winapi::shared::windef::HWND;
+
+#[cfg(windows)]
+use winapi::um::winuser::{GetAsyncKeyState, RegisterHotKey, MSG};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
+
+// static HOTKEY: Mutex<Vec<String>> = Mutex::new(Vec::new());
 
 static THREAD: Lazy<Mutex<Option<stoppable_thread::StoppableHandle<()>>>> =
     Lazy::new(|| Mutex::new(None));
 
 #[cfg(windows)]
 #[node_bindgen(mt)]
-fn start<F: Fn(Vec<String>) + Sync + Send + 'static>(returnjs: F) {
-    *THREAD.lock() = Some(stoppable_thread::spawn(move |stopvar| {
-        let device_state = DeviceState::new();
-        device_state.ptt_hotkey();
+fn start<F: Fn() + Send + 'static>(
+    // keybind: Vec<String>,
+    pressed: F,
+    // released: B,
+) {
+    *THREAD.lock() = Some(stoppable_thread::spawn(move |stopvar| unsafe {
+        RegisterHotKey(
+            0 as HWND,
+            1,
+            (winapi::um::winuser::MOD_CONTROL | winapi::um::winuser::MOD_NOREPEAT)
+                .try_into()
+                .unwrap(),
+            0x42,
+        );
+        let mut message: MSG = std::mem::MaybeUninit::zeroed().assume_init();
+        let mut hotpressed = false;
+        while (winapi::um::winuser::GetMessageW(&mut message, 0 as HWND, 0, 0) != 0)
+            && !stopvar.get()
+        {
+            match hotpressed {
+                false => match message.message {
+                    winapi::um::winuser::WM_HOTKEY => {
+                        println!("pressed");
+                        hotpressed = true;
+                    }
+                    winapi::um::winuser::WM_KEYUP => {
+                        if message.wParam == 0x42 && hotpressed {
+                            println!("released");
+                            hotpressed = false;
+                        }
+                    }
+                    _ => {}
+                },
+                true => {
+                    if GetAsyncKeyState(0x42) == 0 {
+                        println!("released");
+                        hotpressed = false;
+                    }
+                }
+            }
+        }
     }));
 }
 
