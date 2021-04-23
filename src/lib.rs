@@ -177,7 +177,7 @@ fn start<F: Fn(Vec<String>) + Send + 'static>(returnjs: F) {
                         Vk::Oem2 => "Slash".to_string(),
                         _ => char::from(vk.into_u8()).to_string(),
                     };
-                    let rem_index = keys_return.par_iter().position_any(|x| x.clone() == key);
+                    let rem_index = keys_return.iter().position(|x| x.clone() == key);
                     match rem_index {
                         Some(rem) => {
                             keys_return.remove(rem);
