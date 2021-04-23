@@ -59,6 +59,7 @@ fn unload() -> Result<(), &'static str> {
     //     Ok(()) => Ok(()),
     //     _ => Err("Failed to kill worker thread"),
     // }
+    Ok(())
 }
 
 #[node_bindgen]
