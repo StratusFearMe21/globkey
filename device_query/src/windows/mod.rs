@@ -5,7 +5,7 @@ use mouse_state::MouseState;
 use windows::winapi::shared::windef::POINT;
 use windows::winapi::um::winuser;
 use windows::winapi::um::winuser::{
-    GetAsyncKeyState, GetCursorPos, RegisterHotKey, MSG, HWND
+    GetAsyncKeyState, GetCursorPos, RegisterHotKey, HWND, MSG,
 };
 
 pub struct DeviceState;
@@ -79,23 +79,24 @@ impl DeviceState {
                 0 as HWND,
                 1,
                 winapi::um::winuser::MOD_CONTROL
-                | winapi::um::winuser::MOD_NOREPEAT as u32,
+                    | winapi::um::winuser::MOD_NOREPEAT as u32,
                 0x42,
-                );
+            );
         }
-        let mut message: MSG = std::mem::MaybeUninit::zeroed.assume_init()
-            unsafe {
-                while winapi::um::winuser::GetMessageW(
-                    &mut message,
-                    0 as HWND,
-                    0,
-                    0,
-                    ) != 0 {
-                    if message.message == winapi::um::winuser::WM_HOTKEY {
-                        println!("hotkey recieved");
-                    }
+        let mut message: MSG = std::mem::MaybeUninit::zeroed.assume_init();
+        unsafe {
+            while winapi::um::winuser::GetMessageW(
+                &mut message,
+                0 as HWND,
+                0,
+                0,
+            ) != 0
+            {
+                if message.message == winapi::um::winuser::WM_HOTKEY {
+                    println!("hotkey recieved");
                 }
             }
+        }
     }
     fn win_key_to_keycode(&self, win_key: i32) -> Option<Keycode> {
         let mut keycode = match win_key {
