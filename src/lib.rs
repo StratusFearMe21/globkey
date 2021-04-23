@@ -17,14 +17,16 @@ static THREAD: Lazy<Mutex<Option<stoppable_thread::StoppableHandle<()>>>> =
 #[cfg(windows)]
 #[node_bindgen(mt)]
 fn start<F: Fn(Vec<String>) + Sync + Send + 'static>(returnjs: F) {
-    *THREAD.lock() = Some(stoppable_thread::spawn(move |stopvar| loop {
-        LControlKey.bind(|| {
-            returnjs(vec!["LControl".to_string(), "Key0".to_string()]);
-            while LControlKey.is_pressed() {
-                std::hint::spin_loop()
-            }
-            returnjs(vec![]);
-        })
+    LControlKey.bind(|| {
+        returnjs(vec!["LControl".to_string(), "Key0".to_string()]);
+        while LControlKey.is_pressed() {
+            std::hint::spin_loop()
+        }
+        returnjs(vec![]);
+    });
+
+    *THREAD.lock() = Some(stoppable_thread::spawn(move |stopvar| {
+        inputbot::handle_input_events();
     }));
 }
 
