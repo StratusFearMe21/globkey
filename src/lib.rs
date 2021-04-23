@@ -17,8 +17,8 @@ fn start<F: Fn(Vec<String>) + Send + 'static>(returnjs: F) {
     *THREAD.lock() = Some(stoppable_thread::spawn(move |stopvar| {
         let receiver = message_loop::start().unwrap();
         let mut keys_return = vec![];
-        while !stopvar.get() {
-            match receiver.next_event() {
+        loop {
+            match receiver.next_event_timeout(core::time::Duration::from_millis(500)) {
                 message_loop::Event::Keyboard { vk: Vk::Escape, .. } => {
                     break;
                 }
@@ -48,18 +48,17 @@ fn start<F: Fn(Vec<String>) + Send + 'static>(returnjs: F) {
                 }
                 _ => (),
             }
+            println!("timeout");
         }
     }));
 }
 
 #[node_bindgen]
 fn unload() -> Result<(), &'static str> {
-    message_loop::stop();
-    // match THREAD.lock().take().unwrap().stop().join() {
-    //     Ok(()) => Ok(()),
-    //     _ => Err("Failed to kill worker thread"),
-    // }
-    Ok(())
+    match THREAD.lock().take().unwrap().stop().join() {
+        Ok(()) => Ok(()),
+        _ => Err("Failed to kill worker thread"),
+    }
 }
 
 #[node_bindgen]
