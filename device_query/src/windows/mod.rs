@@ -5,7 +5,7 @@ use mouse_state::MouseState;
 use windows::winapi::shared::windef::POINT;
 use windows::winapi::um::winuser;
 use windows::winapi::um::winuser::{
-    GetAsyncKeyState, GetCursorPos, RegisterHotKey,
+    GetAsyncKeyState, GetCursorPos, RegisterHotKey, MSG, HWND
 };
 
 pub struct DeviceState;
@@ -71,31 +71,31 @@ impl DeviceState {
         }
         keycodes
     }
-    pub fn ptt_hotkey(&self) -> bool {
+    pub fn ptt_hotkey(&self) {
         let mut keycodes = vec![];
         let mut keymap = vec![];
         unsafe {
             RegisterHotKey(
-                std::ptr::null,
+                0 as HWND,
                 1,
                 winapi::um::winuser::MOD_CONTROL
-                    | winapi::um::winuser::MOD_NOREPEAT,
+                | winapi::um::winuser::MOD_NOREPEAT as u32,
                 0x42,
-            );
+                );
         }
-        let mut message = winapi::um::winuser::MSG::default();
-        unsafe {
-            while winapi::um::winuser::GetMessageA(
-                &mut message,
-                std::ptr::null,
-                0,
-                0,
-            ) {
-                if message.message == winapi::um::winuser::WM_HOTKEY {
-                    println!("hotkey recieved");
+        let mut message: MSG = std::mem::MaybeUninit::zeroed.assume_init()
+            unsafe {
+                while winapi::um::winuser::GetMessageW(
+                    &mut message,
+                    0 as HWND,
+                    0,
+                    0,
+                    ) != 0 {
+                    if message.message == winapi::um::winuser::WM_HOTKEY {
+                        println!("hotkey recieved");
+                    }
                 }
             }
-        }
     }
     fn win_key_to_keycode(&self, win_key: i32) -> Option<Keycode> {
         let mut keycode = match win_key {
