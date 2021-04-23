@@ -344,8 +344,6 @@ pub fn start() -> Result<EventReceiver, MessageLoopError> {
             Err(3) => (),
             _ => return Err(MessageLoopError::AlreadyActive),
         }
-
-        std::hint::spin_loop();
     }
 
     // The message loop is now starting.
@@ -618,7 +616,5 @@ pub fn stop() {
 
     // Cleaning up the static variables is up to the message loop thread.
     // We just have to wait until it finishes.
-    while STATE.load(Ordering::Acquire) != 0 {
-        std::hint::spin_loop();
-    }
+    while STATE.load(Ordering::Acquire) != 0 {}
 }
