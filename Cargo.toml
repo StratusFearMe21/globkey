@@ -1,6 +1,6 @@
 [package]
 name = "electron_globkey"
-version = "1.0.51"
+version = "1.0.53"
 authors = ["Isaac Mills <rooster0055@protonmail.com>"]
 edition = "2018"
 build = "src/build.rs"
@@ -16,12 +16,7 @@ once_cell = "*"
 parking_lot = "*"
 rayon = "*"
 stoppable_thread = "*"
-
-[target.'cfg(not(windows))'.dependencies]
-device_query = "*"
-
-[target.'cfg(windows)'.dependencies]
-inputbot = "*"
+device_query = { version = "*", path = "device_query" }
 
 [build-dependencies]
 node-bindgen = { version = "4.0", features = ["build"] }
