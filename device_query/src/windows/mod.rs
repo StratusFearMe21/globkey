@@ -74,8 +74,6 @@ impl DeviceState {
         keycodes
     }
     pub fn ptt_hotkey(&self) {
-        let mut keycodes = vec![];
-        let mut keymap = vec![];
         unsafe {
             RegisterHotKey(
                 0 as HWND,
