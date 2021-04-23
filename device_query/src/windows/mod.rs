@@ -78,12 +78,14 @@ impl DeviceState {
             RegisterHotKey(
                 0 as HWND,
                 1,
-                winapi::um::winuser::MOD_CONTROL
-                    | winapi::um::winuser::MOD_NOREPEAT as u32,
+                (winapi::um::winuser::MOD_CONTROL
+                    | winapi::um::winuser::MOD_NOREPEAT)
+                    .try_into()
+                    .unwrap(),
                 0x42,
             );
         }
-        let mut message: MSG = std::mem::MaybeUninit::zeroed.assume_init();
+        let mut message: MSG = std::mem::MaybeUninit::zeroed().assume_init();
         unsafe {
             while winapi::um::winuser::GetMessageW(
                 &mut message,
