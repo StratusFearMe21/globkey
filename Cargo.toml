@@ -17,7 +17,7 @@ parking_lot = "*"
 rayon = "*"
 stoppable_thread = "*"
 
-[target.'cfg(not(windows))'.dependencies]
+# [target.'cfg(not(windows))'.dependencies]
 device_query = "*"
 
 [target.'cfg(windows)'.dependencies]

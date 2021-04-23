@@ -74,7 +74,7 @@ unsafe extern "system" fn window_proc(
     msg: minwindef::UINT,
     w_param: minwindef::WPARAM,
     l_param: minwindef::LPARAM,
-) -> minwindef::LRESULT {
+    ) -> minwindef::LRESULT {
     match msg {
         // Note: This loop is only here to break from the scope early.
         winuser::WM_INPUT => loop {
@@ -86,7 +86,7 @@ unsafe extern "system" fn window_proc(
                 ptr::null_mut(),
                 &mut size,
                 mem::size_of::<winuser::RAWINPUTHEADER>() as _,
-            );
+                );
 
             if result == -1i32 as u32 {
                 break;
@@ -106,7 +106,7 @@ unsafe extern "system" fn window_proc(
                 buffer.as_mut_ptr() as _,
                 &mut size,
                 mem::size_of::<winuser::RAWINPUTHEADER>() as _,
-            );
+                );
 
             if result != size {
                 // We failed to write to the buffer.
@@ -132,7 +132,7 @@ unsafe extern "system" fn window_proc(
                                 x: data.lLastX,
                                 y: data.lLastY,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usFlags, winuser::MOUSE_MOVE_ABSOLUTE) {
@@ -144,7 +144,7 @@ unsafe extern "system" fn window_proc(
                                     & winuser::MOUSE_VIRTUAL_DESKTOP
                                     == winuser::MOUSE_VIRTUAL_DESKTOP,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_LEFT_BUTTON_DOWN) {
@@ -153,7 +153,7 @@ unsafe extern "system" fn window_proc(
                                 action: Action::Press,
                                 button: Button::Left,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_LEFT_BUTTON_UP) {
@@ -162,7 +162,7 @@ unsafe extern "system" fn window_proc(
                                 action: Action::Release,
                                 button: Button::Left,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_RIGHT_BUTTON_DOWN)
@@ -172,7 +172,7 @@ unsafe extern "system" fn window_proc(
                                 action: Action::Press,
                                 button: Button::Right,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_RIGHT_BUTTON_UP) {
@@ -181,7 +181,7 @@ unsafe extern "system" fn window_proc(
                                 action: Action::Release,
                                 button: Button::Right,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_MIDDLE_BUTTON_DOWN)
@@ -191,7 +191,7 @@ unsafe extern "system" fn window_proc(
                                 action: Action::Press,
                                 button: Button::Middle,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_MIDDLE_BUTTON_UP) {
@@ -200,7 +200,7 @@ unsafe extern "system" fn window_proc(
                                 action: Action::Release,
                                 button: Button::Middle,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_BUTTON_4_DOWN) {
@@ -209,7 +209,7 @@ unsafe extern "system" fn window_proc(
                                 action: Action::Press,
                                 button: Button::X1,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_BUTTON_4_UP) {
@@ -218,7 +218,7 @@ unsafe extern "system" fn window_proc(
                                 action: Action::Release,
                                 button: Button::X1,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_BUTTON_5_DOWN) {
@@ -227,7 +227,7 @@ unsafe extern "system" fn window_proc(
                                 action: Action::Press,
                                 button: Button::X2,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_BUTTON_5_UP) {
@@ -236,7 +236,7 @@ unsafe extern "system" fn window_proc(
                                 action: Action::Release,
                                 button: Button::X2,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, winuser::RI_MOUSE_WHEEL) {
@@ -245,7 +245,7 @@ unsafe extern "system" fn window_proc(
                                 delta: data.usButtonData as i16 as f32 / 120.0,
                                 direction: WheelDirection::Vertical,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
 
                     if has_flags(data.usButtonFlags, 0x0800) {
@@ -254,7 +254,7 @@ unsafe extern "system" fn window_proc(
                                 delta: data.usButtonData as i16 as f32 / 120.0,
                                 direction: WheelDirection::Horizontal,
                             })
-                            .unwrap();
+                        .unwrap();
                     }
                 }
                 winuser::RIM_TYPEKEYBOARD => {
@@ -267,7 +267,7 @@ unsafe extern "system" fn window_proc(
                             scan_code: data.MakeCode as u32,
                             action: Action::from_press(data.Flags & 1 == 0),
                         })
-                        .unwrap();
+                    .unwrap();
                 }
                 2 => (),
                 _ => unreachable!("Invalid message"),
@@ -381,8 +381,8 @@ pub fn start() -> Result<EventReceiver, MessageLoopError> {
             if class == 0 {
                 error_s
                     .send(Err(MessageLoopError::OsError(
-                        WindowsError::from_last_error(),
-                    )))
+                                WindowsError::from_last_error(),
+                                )))
                     .unwrap();
                 return;
             }
@@ -400,13 +400,13 @@ pub fn start() -> Result<EventReceiver, MessageLoopError> {
                 ptr::null_mut(),
                 h_instance,
                 ptr::null_mut(),
-            );
+                );
 
             if h_wnd.is_null() {
                 error_s
                     .send(Err(MessageLoopError::OsError(
-                        WindowsError::from_last_error(),
-                    )))
+                                WindowsError::from_last_error(),
+                                )))
                     .unwrap();
                 return;
             }
@@ -428,13 +428,13 @@ pub fn start() -> Result<EventReceiver, MessageLoopError> {
                 rid.as_ptr(),
                 rid.len() as _,
                 mem::size_of::<winuser::RAWINPUTDEVICE>() as _,
-            );
+                );
 
             if result == 0 {
                 error_s
                     .send(Err(MessageLoopError::OsError(
-                        WindowsError::from_last_error(),
-                    )))
+                                WindowsError::from_last_error(),
+                                )))
                     .unwrap();
                 return;
             }
@@ -594,7 +594,7 @@ impl EventReceiver {
 impl Drop for EventReceiver {
     fn drop(&mut self) {
         // Stop the message loop.
-        stop();
+        self.stop();
     }
 }
 
@@ -605,16 +605,3 @@ impl Drop for EventReceiver {
 ///
 /// Be careful, if another libary already created a message loop, this function will
 /// still stop it.
-pub fn stop() {
-    if !is_active() {
-        return;
-    }
-
-    // If the `EventReceiver` was able to be constructed,
-    // that means that `STATE` is currently `2`.
-    STATE.store(3, Ordering::SeqCst);
-
-    // Cleaning up the static variables is up to the message loop thread.
-    // We just have to wait until it finishes.
-    while STATE.load(Ordering::Acquire) != 0 {}
-}
