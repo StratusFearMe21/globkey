@@ -1751,9 +1751,8 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 [[package]]
 name = "winput"
 version = "0.2.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1453ded891d9778e54dffa7de2cf66abc7205fe0410553dd5f2f0fc52e7bb166"
 dependencies = [
+ "stoppable_thread",
  "winapi",
 ]
 
