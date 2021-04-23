@@ -19,23 +19,23 @@ fn start<F: Fn(Vec<String>) + Send + 'static>(returnjs: F) {
         let mut keys_return = vec![];
         loop {
             match receiver.next_event_timeout(core::time::Duration::from_millis(500)) {
-                message_loop::Event::Keyboard { vk: Vk::Escape, .. } => {
+                Some(message_loop::Event::Keyboard { vk: Vk::Escape, .. }) => {
                     break;
                 }
-                message_loop::Event::Keyboard {
+                Some(message_loop::Event::Keyboard {
                     vk,
                     action: Action::Press,
                     ..
-                } => {
+                }) => {
                     let key = char::from(vk.into_u8()).to_string();
                     keys_return.push(key);
                     returnjs(keys_return.clone());
                 }
-                message_loop::Event::Keyboard {
+                Some(message_loop::Event::Keyboard {
                     vk,
                     action: Action::Release,
                     ..
-                } => {
+                }) => {
                     let key = char::from(vk.into_u8()).to_string();
                     let rem_index = keys_return.par_iter().position_any(|x| x.clone() == key);
                     match rem_index {
