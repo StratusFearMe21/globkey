@@ -3,8 +3,12 @@ use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use std::convert::TryInto;
 
+use std::mem;
 #[cfg(windows)]
-use winapi::shared::windef::HWND;
+use winapi::{
+    shared::{hidusage, windef::HWND},
+    um::winuser,
+};
 
 #[cfg(windows)]
 use winapi::um::winuser::{GetAsyncKeyState, RegisterHotKey, MSG};
@@ -32,31 +36,39 @@ fn start<F: Fn() + Send + 'static>(
                 .unwrap(),
             0x42,
         );
+
+        let mut rid: [winuser::RAWINPUTDEVICE; 1] = mem::zeroed();
+        // Keyboard
+        rid[0].dwFlags = winuser::RIDEV_NOLEGACY | winuser::RIDEV_INPUTSINK;
+        rid[0].usUsagePage = hidusage::HID_USAGE_PAGE_GENERIC;
+        rid[0].usUsage = hidusage::HID_USAGE_GENERIC_KEYBOARD;
+        rid[0].hwndTarget = 0 as HWND;
+
+        winuser::RegisterRawInputDevices(
+            rid.as_ptr(),
+            rid.len() as _,
+            mem::size_of::<winuser::RAWINPUTDEVICE>() as _,
+        );
+
         let mut message: MSG = std::mem::MaybeUninit::zeroed().assume_init();
         let mut hotpressed = false;
         while (winapi::um::winuser::GetMessageW(&mut message, 0 as HWND, 0, 0) != 0)
             && !stopvar.get()
         {
-            match hotpressed {
-                false => match message.message {
-                    winapi::um::winuser::WM_HOTKEY => {
-                        println!("pressed");
-                        hotpressed = true;
-                    }
-                    winapi::um::winuser::WM_KEYUP => {
-                        if message.wParam == 0x42 && hotpressed {
+            match message.message {
+                winapi::um::winuser::WM_HOTKEY => {
+                    println!("pressed");
+                    hotpressed = true;
+                }
+                winapi::um::winuser::WM_INPUT => {
+                    if hotpressed {
+                        if GetAsyncKeyState(0x42) == 0 {
                             println!("released");
-                            hotpressed = true;
+                            hotpressed = false;
                         }
                     }
-                    _ => {}
-                },
-                true => {
-                    if GetAsyncKeyState(0x42) == 0 {
-                        println!("released");
-                        hotpressed = false;
-                    }
                 }
+                _ => {}
             }
         }
     }));
