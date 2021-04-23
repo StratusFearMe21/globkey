@@ -97,7 +97,9 @@ fn start<F: Fn(Vec<String>) + Send + 'static>(returnjs: F) {
                         Vk::Oem2 => "Slash".to_string(),
                         _ => char::from(vk.into_u8()).to_string(),
                     };
-                    keys_return.push(key);
+                    if !keys_return.contains(&key) {
+                        keys_return.push(key);
+                    }
                     returnjs(keys_return.clone());
                 }
                 message_loop::Event::Keyboard {
