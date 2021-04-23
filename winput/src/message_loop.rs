@@ -541,7 +541,7 @@ pub enum Event {
 /// [`start`]: fn.start.html
 pub struct EventReceiver {
     receiver: mpsc::Receiver<Event>,
-    pub thread: Option<stoppable_thread::StoppableHandle<()>>,
+    thread: Option<stoppable_thread::StoppableHandle<()>>,
 }
 
 impl EventReceiver {
