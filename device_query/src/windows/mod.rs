@@ -2,10 +2,12 @@ extern crate winapi;
 
 use keymap::Keycode;
 use mouse_state::MouseState;
+use std::convert::TryInto;
+use windows::winapi::shared::windef::HWND;
 use windows::winapi::shared::windef::POINT;
 use windows::winapi::um::winuser;
 use windows::winapi::um::winuser::{
-    GetAsyncKeyState, GetCursorPos, RegisterHotKey, HWND, MSG,
+    GetAsyncKeyState, GetCursorPos, RegisterHotKey, MSG,
 };
 
 pub struct DeviceState;
@@ -84,9 +86,8 @@ impl DeviceState {
                     .unwrap(),
                 0x42,
             );
-        }
-        let mut message: MSG = std::mem::MaybeUninit::zeroed().assume_init();
-        unsafe {
+            let mut message: MSG =
+                std::mem::MaybeUninit::zeroed().assume_init();
             while winapi::um::winuser::GetMessageW(
                 &mut message,
                 0 as HWND,
