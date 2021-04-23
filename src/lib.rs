@@ -54,10 +54,11 @@ fn start<F: Fn(Vec<String>) + Send + 'static>(returnjs: F) {
 
 #[node_bindgen]
 fn unload() -> Result<(), &'static str> {
-    match THREAD.lock().take().unwrap().stop().join() {
-        Ok(()) => Ok(()),
-        _ => Err("Failed to kill worker thread"),
-    }
+    message_loop::stop();
+    // match THREAD.lock().take().unwrap().stop().join() {
+    //     Ok(()) => Ok(()),
+    //     _ => Err("Failed to kill worker thread"),
+    // }
 }
 
 #[node_bindgen]
