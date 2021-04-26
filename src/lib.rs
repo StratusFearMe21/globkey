@@ -19,7 +19,7 @@ fn start<F: Fn() + Send + 'static>(
     // released: B,
 ) {
     *THREAD.lock() = Some(stoppable_thread::spawn(move |stopvar| {
-        let mut receiver = message_loop::start();
+        let mut receiver = message_loop::start().unwrap();
         loop {
             if stopvar.get() {
                 receiver.stop();
