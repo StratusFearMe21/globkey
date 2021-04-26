@@ -18,7 +18,7 @@ rayon = "*"
 stoppable_thread = "*"
 
 [target.'cfg(windows)'.dependencies]
-winapi = { version = "0.3.9", features = ["winuser", "hidusage"] }
+winput = { version = "*", path = "winput" }
 
 [build-dependencies]
 node-bindgen = { version = "4.0", features = ["build"] }
