@@ -1,6 +1,6 @@
 [package]
 name = "electron_globkey"
-version = "1.0.62"
+version = "1.0.41"
 authors = ["Isaac Mills <rooster0055@protonmail.com>"]
 edition = "2018"
 build = "src/build.rs"
@@ -12,13 +12,11 @@ crate-type = ["cdylib"]
 
 [dependencies]
 node-bindgen = { version = "4.0" }
+device_query = "*"
 once_cell = "*"
 parking_lot = "*"
 rayon = "*"
 stoppable_thread = "*"
-
-[target.'cfg(windows)'.dependencies]
-winput = { version = "*", path = "winput" }
 
 [build-dependencies]
 node-bindgen = { version = "4.0", features = ["build"] }
